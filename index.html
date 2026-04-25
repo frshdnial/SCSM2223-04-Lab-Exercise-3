@@ -14,22 +14,23 @@
   <div class="search-box">
     <input type="text" id="cityInput" placeholder="Enter city name...">
     <button id="searchBtn">Search</button>
-    <p id="errorMsg"></p>
+    <div class="unit-toggle">
+        <button id="toggleUnit" class="unit-btn">Switch to °F</button>
+    </div>
   </div>
+  
+  <div id="recentSearches" class="chip-container"></div>
+
+  <p id="errorMsg"></p>
 
   <div class="card" id="currentWeather">
     <h2 id="cityName" class="skeleton"></h2>
-    <p id="temp" class="skeleton"></p>
-    <p id="desc" class="skeleton"></p>
-    <p id="humidity" class="skeleton"></p>
-    <p id="wind" class="skeleton"></p>
+    <p id="temp" class="temp skeleton"></p> 
+    <p id="desc" class="description skeleton"></p>
     <p id="time" class="skeleton"></p>
   </div>
 
-  <div id="forecast" class="forecast-row">
-    <!-- 7 cards -->
-  </div>
-
+  <div id="forecast" class="forecast-row"></div>
 </div>
 
 <script src="app.js"></script>
