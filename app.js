@@ -55,6 +55,7 @@ async function getWeather(city) {
     // jQuery call
     getTime(timezone);
 
+    saveSearch(city);
   } catch (err) {
     if (err.name === "AbortError") {
       showError("Request timeout (10s)");
@@ -104,5 +105,32 @@ function getTime(timezone) {
     .always(function () {
       console.log("Time API request completed at " + new Date());
     });
+}
+
+function debounce(fn, delay) {
+  let timeout;
+  return function (...args) {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => fn.apply(this, args), delay);
+  };
+}
+
+const debouncedSearch = debounce(() => {
+  const city = document.getElementById("cityInput").value;
+  getWeather(city);
+}, 500);
+
+document.getElementById("searchBtn").addEventListener("click", debouncedSearch);
+
+function showError(msg) {
+  document.getElementById("errorMsg").innerText = msg;
+}
+
+function showSkeleton() {
+  document.querySelectorAll("p, h2").forEach(el => el.classList.add("skeleton"));
+}
+
+function removeSkeleton() {
+  document.querySelectorAll(".skeleton").forEach(el => el.classList.remove("skeleton"));
 }
 
