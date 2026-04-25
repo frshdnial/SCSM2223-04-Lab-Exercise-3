@@ -3,7 +3,21 @@ const weatherMap = {
   1: { desc: "Mainly Clear 🌤" },
   2: { desc: "Partly Cloudy ⛅" },
   3: { desc: "Overcast ☁️" },
+
+  45: { desc: "Fog 🌫" },
+  48: { desc: "Rime Fog 🌫" },
+
+  51: { desc: "Light Drizzle 🌦" },
+  53: { desc: "Drizzle 🌦" },
+  55: { desc: "Heavy Drizzle 🌧" },
+
   61: { desc: "Rain 🌧" },
+  63: { desc: "Moderate Rain 🌧" },
+  65: { desc: "Heavy Rain 🌧" },
+
+  80: { desc: "Rain Showers 🌦" },
+  81: { desc: "Heavy Showers 🌧" },
+
   95: { desc: "Thunderstorm ⛈" }
 };
 
