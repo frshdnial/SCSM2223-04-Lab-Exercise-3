@@ -92,3 +92,17 @@ function displayWeather(data, city) {
     forecastDiv.appendChild(card);
   });
 }
+
+function getTime(timezone) {
+  $.getJSON(`https://worldtimeapi.org/api/timezone/${timezone}`)
+    .done(function (data) {
+      $("#time").text("Local Time: " + data.datetime);
+    })
+    .fail(function () {
+      $("#time").text("Local Time: " + new Date().toLocaleString());
+    })
+    .always(function () {
+      console.log("Time API request completed at " + new Date());
+    });
+}
+
