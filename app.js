@@ -1,3 +1,45 @@
+let currentWeatherData = null; 
+let currentUnit = 'C';
+
+function toggleUnit() {
+    currentUnit = currentUnit === 'C' ? 'F' : 'C';
+    document.getElementById("toggleUnit").innerText = `Switch to °${currentUnit === 'C' ? 'F' : 'C'}`;
+    
+    if (currentWeatherData) {
+        displayWeather(currentWeatherData, document.getElementById("cityName").innerText);
+    }
+}
+
+function convertTemp(celsius) {
+    if (currentUnit === 'F') {
+        return Math.round((celsius * 9/5) + 32);
+    }
+    return celsius;
+}
+
+function saveSearch(city) {
+    let history = JSON.parse(localStorage.getItem("weatherHistory")) || [];
+    history = history.filter(item => item.toLowerCase() !== city.toLowerCase());
+    history.unshift(city);
+    history = history.slice(0, 5);
+    localStorage.setItem("weatherHistory", JSON.stringify(history));
+    renderChips();
+}
+
+function renderChips() {
+    const container = document.getElementById("recentSearches");
+    const history = JSON.parse(localStorage.getItem("weatherHistory")) || [];
+    container.innerHTML = "";
+    
+    history.forEach(city => {
+        const chip = document.createElement("div");
+        chip.className = "chip";
+        chip.innerText = city;
+        chip.onclick = () => getWeather(city); 
+        container.appendChild(chip);
+    });
+}
+
 const weatherMap = {
   0: { desc: "Clear Sky ☀️" },
   1: { desc: "Mainly Clear 🌤" },
@@ -25,7 +67,6 @@ async function getWeather(city) {
   try {
     showSkeleton();
 
-    // Validation
     if (!city || city.length < 2) {
       showError("Enter at least 2 characters");
       return;
@@ -65,11 +106,11 @@ async function getWeather(city) {
     const data = await weatherRes.json();
 
     displayWeather(data, name);
+    saveSearch(name);
 
     // jQuery call
     getTime(timezone);
 
-    saveSearch(city);
   } catch (err) {
     if (err.name === "AbortError") {
       showError("Request timeout (10s)");
@@ -81,16 +122,19 @@ async function getWeather(city) {
 
 function displayWeather(data, city) {
   removeSkeleton();
+  currentWeatherData = data; // Correctly saving data
 
   document.getElementById("cityName").innerText = city;
 
-  const temp = data.current_weather.temperature;
+  const rawTemp = data.current_weather.temperature;
   const code = data.current_weather.weathercode;
 
-  document.getElementById("temp").innerText = temp + "°C";
+  // FIX 1: Use the converter and the currentUnit variable for the main display
+  const displayTemp = convertTemp(rawTemp);
+  document.getElementById("temp").innerText = `${displayTemp}°${currentUnit}`;
+  
   document.getElementById("desc").innerText = weatherMap[code]?.desc;
 
-  // Forecast
   const forecastDiv = document.getElementById("forecast");
   forecastDiv.innerHTML = "";
 
@@ -98,10 +142,15 @@ function displayWeather(data, city) {
     const card = document.createElement("div");
     card.className = "forecast-card";
 
+    // You calculated these, but weren't using them in the HTML below!
+    const max = convertTemp(data.daily.temperature_2m_max[i]);
+    const min = convertTemp(data.daily.temperature_2m_min[i]);
+
+    // FIX 2: Plug the 'max' and 'min' variables into the template literal
     card.innerHTML = `
       <p>${day}</p>
       <p>${weatherMap[data.daily.weathercode[i]]?.desc}</p>
-      <p>${data.daily.temperature_2m_max[i]}° / ${data.daily.temperature_2m_min[i]}°</p>
+      <p>${max}° / ${min}°</p>
     `;
 
     forecastDiv.appendChild(card);
@@ -135,6 +184,7 @@ const debouncedSearch = debounce(() => {
 }, 500);
 
 document.getElementById("searchBtn").addEventListener("click", debouncedSearch);
+document.getElementById("toggleUnit").addEventListener("click", toggleUnit);
 
 function showError(msg) {
   document.getElementById("errorMsg").innerText = msg;
@@ -148,3 +198,4 @@ function removeSkeleton() {
   document.querySelectorAll(".skeleton").forEach(el => el.classList.remove("skeleton"));
 }
 
+renderChips();
