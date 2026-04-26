@@ -72,11 +72,9 @@ async function getWeather(city) {
       return;
     }
 
-    // Timeout setup
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 10000);
 
-    // 1. Geocoding
     const geoRes = await fetch(
       `https://geocoding-api.open-meteo.com/v1/search?name=${city}`,
       { signal: controller.signal }
@@ -93,7 +91,6 @@ async function getWeather(city) {
 
     const { latitude, longitude, timezone, name } = geoData.results[0];
 
-    // 2. Weather
     const weatherRes = await fetch(
       `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true&daily=temperature_2m_max,temperature_2m_min,weathercode`,
       { signal: controller.signal }
@@ -107,8 +104,6 @@ async function getWeather(city) {
 
     displayWeather(data, name);
     saveSearch(name);
-
-    // jQuery call
     getTime(timezone);
 
   } catch (err) {
@@ -122,14 +117,13 @@ async function getWeather(city) {
 
 function displayWeather(data, city) {
   removeSkeleton();
-  currentWeatherData = data; // Correctly saving data
+  currentWeatherData = data; 
 
   document.getElementById("cityName").innerText = city;
 
   const rawTemp = data.current_weather.temperature;
   const code = data.current_weather.weathercode;
 
-  // FIX 1: Use the converter and the currentUnit variable for the main display
   const displayTemp = convertTemp(rawTemp);
   document.getElementById("temp").innerText = `${displayTemp}°${currentUnit}`;
   
@@ -142,11 +136,9 @@ function displayWeather(data, city) {
     const card = document.createElement("div");
     card.className = "forecast-card";
 
-    // You calculated these, but weren't using them in the HTML below!
     const max = convertTemp(data.daily.temperature_2m_max[i]);
     const min = convertTemp(data.daily.temperature_2m_min[i]);
 
-    // FIX 2: Plug the 'max' and 'min' variables into the template literal
     card.innerHTML = `
       <p>${day}</p>
       <p>${weatherMap[data.daily.weathercode[i]]?.desc}</p>
@@ -158,9 +150,21 @@ function displayWeather(data, city) {
 }
 
 function getTime(timezone) {
-  $.getJSON(`https://worldtimeapi.org/api/timezone/${timezone}`)
+  $.getJSON(`https://timeapi.io/api/Time/current/zone?timeZone=${timezone}`)
     .done(function (data) {
-      $("#time").text("Local Time: " + data.datetime);
+      const date = new Date(data.dateTime);
+
+      const formatted = date.toLocaleString("en-US", {
+        year: "numeric",
+        month: "numeric",
+        day: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: true
+      });
+
+      $("#time").text("Local Time: " + formatted);
     })
     .fail(function () {
       $("#time").text("Local Time: " + new Date().toLocaleString());
