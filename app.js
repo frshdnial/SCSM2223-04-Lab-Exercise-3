@@ -150,21 +150,9 @@ function displayWeather(data, city) {
 }
 
 function getTime(timezone) {
-  $.getJSON(`https://timeapi.io/api/Time/current/zone?timeZone=${timezone}`)
+  $.getJSON(`https://worldtimeapi.org/api/timezone/${timezone}`)
     .done(function (data) {
-      const date = new Date(data.dateTime);
-
-      const formatted = date.toLocaleString("en-US", {
-        year: "numeric",
-        month: "numeric",
-        day: "numeric",
-        hour: "numeric",
-        minute: "2-digit",
-        second: "2-digit",
-        hour12: true
-      });
-
-      $("#time").text("Local Time: " + formatted);
+      $("#time").text("Local Time: " + data.datetime);
     })
     .fail(function () {
       $("#time").text("Local Time: " + new Date().toLocaleString());
