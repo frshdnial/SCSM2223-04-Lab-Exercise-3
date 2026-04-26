@@ -1,49 +1,171 @@
 body {
-  font-family: Arial;
-  background: #0b1f4b; 
-  color: #f5f5f5;
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background: radial-gradient(circle at top, #1e3c72, #0b1f4b); 
+  color: #ffffff;
+  margin: 0;
+  padding: 20px;
+  min-height: 100vh;
 }
 
 .container {
-  max-width: 800px;
+  max-width: 900px;
   margin: auto;
 }
 
-.card {
-  background: #ffffff;
-  color: #0b1f4b;
-  padding: 20px;
-  margin: 10px 0;
-  border-radius: 10px;
-  border: 1px solid #d4af37; /* gold accent */
-  box-shadow: 0 4px 12px rgba(11, 31, 75, 0.3);
+.search-box {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 30px;
 }
 
-/* Forecast layout */
+#cityInput {
+  flex: 1;
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  backdrop-filter: blur(10px);
+  font-size: 16px;
+}
+
+#searchBtn {
+  padding: 0 25px;
+  border-radius: 12px;
+  border: none;
+  background: #ffd700;
+  color: #0b1f4b;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+#searchBtn:hover {
+  transform: translateY(-2px);
+  background: #ffea00;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(15px);
+  padding: 30px;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  text-align: center;
+  margin-bottom: 30px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.temp {
+  font-size: 4rem;
+  font-weight: 800;
+  margin: 10px 0;
+  display: block;
+  text-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+}
+
+.description {
+  text-transform: capitalize;
+  font-size: 1.2rem;
+  opacity: 0.9;
+}
+
 .forecast-row {
   display: flex;
-  gap: 10px;
+  gap: 15px;
+  flex-wrap: wrap; 
 }
 
 .forecast-card {
   flex: 1;
-  background: #ffffff;
-  padding: 10px;
-  border-radius: 8px;
-  text-align: center;
-  border: 1px solid #d4af37;
-  color: #0b1f4b;
+  min-width: 120px; 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between; 
+  
+  background: rgba(255, 255, 255, 0.05);
+  padding: 20px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: background 0.3s;
 }
 
-/* Skeleton shimmer */
+.forecast-card:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.forecast-temp {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-top: 8px;
+}
+
+#errorMsg {
+  color: #ff4d4d; /* A vibrant red for visibility */
+  font-size: 14px;
+  margin-top: 10px;
+  font-weight: 500;
+  min-height: 20px; /* Prevents the layout from jumping when text appears */
+}
+
+#errorMsg:not(:empty) {
+  animation: shake 0.3s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
 @keyframes shimmer {
   0% { background-position: -200% 0; }
   100% { background-position: 200% 0; }
 }
 
 .skeleton { 
-    background: linear-gradient(90deg, #ddd 25%, #eee 50%, #ddd 75%); 
+    height: 25px;
+    background: linear-gradient(90deg, rgba(255,255,255,0.1) 25%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.1) 75%); 
     background-size: 200% 100%; 
     animation: shimmer 1.5s infinite; 
-    border-radius: 4px;
+    border-radius: 8px;
+}
+
+.chip-container {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.chip {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.chip:hover {
+  background: rgba(255, 255, 255, 0.4);
+  transform: translateY(-2px);
+}
+
+/* Toggle Button */
+.unit-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid white;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.unit-btn:hover {
+  background: white;
+  color: #0b1f4b;
 }
